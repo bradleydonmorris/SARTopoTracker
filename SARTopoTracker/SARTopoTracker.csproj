@@ -38,6 +38,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Device" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -49,14 +50,41 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\GarminAsset.cs" />
+    <Compile Include="Assets\GarminTypes.cs" />
+    <Compile Include="Assets\IAsset.cs" />
+    <Compile Include="Assets\APRSAsset.cs" />
+    <Compile Include="Assets\LocationServiceAsset.cs" />
+    <Compile Include="Config\AGWPEPortSettings.cs" />
+    <Compile Include="Config\ConfigFile.cs" />
+    <Compile Include="Config\GenericConfig.cs" />
+    <Compile Include="Config\IConfig.cs" />
+    <Compile Include="Config\SARTopoSettings.cs" />
+    <Compile Include="Form_AGWPEPort.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form_AGWPEPort.designer.cs">
+      <DependentUpon>Form_AGWPEPort.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form_Main.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form_Main.Designer.cs">
       <DependentUpon>Form_Main.cs</DependentUpon>
     </Compile>
+    <Compile Include="Listeners\AGWPEListener.cs" />
+    <Compile Include="Listeners\GarminListener.cs" />
+    <Compile Include="Listeners\GarminReader.cs" />
+    <Compile Include="Listeners\IListener.cs" />
+    <Compile Include="Listeners\ExceptionEventArgs.cs" />
+    <Compile Include="Listeners\LocationServiceListener.cs" />
+    <Compile Include="Listeners\DataReceivedEventArgs.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Statics.cs" />
+    <EmbeddedResource Include="Form_AGWPEPort.resx">
+      <DependentUpon>Form_AGWPEPort.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form_Main.resx">
       <DependentUpon>Form_Main.cs</DependentUpon>
     </EmbeddedResource>
@@ -82,6 +110,20 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AgwpePort\AgwpePort.csproj">
+      <Project>{96d6e840-27cd-4eb6-a7c8-241c7b6f65cc}</Project>
+      <Name>AgwpePort</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Garmin.Device.Core\Garmin.Device.Core.csproj">
+      <Project>{1eb16237-97a2-4f6f-97eb-48b3b4b17530}</Project>
+      <Name>Garmin.Device.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HamAprsParser\HamAprsParser.csproj">
+      <Project>{b9d12e6a-ab2b-4aab-9ef5-64b4c75dc914}</Project>
+      <Name>HamAprsParser</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
