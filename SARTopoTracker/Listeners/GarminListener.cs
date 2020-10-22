@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SARTopoTracker.Listeners
@@ -13,29 +14,57 @@ namespace SARTopoTracker.Listeners
 		public event DataReceivedEventHandler DataReceivedEvent;
 		public event ExceptionEventHandler ExceptionEvent;
 
+		private Boolean _Stop { get; set; }
+
+		public void Dispose()
+		{
+			this.Stop();
+		}
+
 		public void Start()
 		{
-			GarminDevice baseStation = null;
-
-			var list = GarminDevice.DiscoverDevices();
+			this._Stop = false;
+			List<GarminDevice> list = GarminDevice.DiscoverDevices();
 			list.ForEach
 			(
-				f =>
+				garminDevice =>
 				{
-					GarminReader reader = new GarminReader(f);
+					Task task;
+					GarminReader reader = new GarminReader(garminDevice);
 					DeviceInformation info = reader.ReadInfo();
-					if (baseStation == null && info.SupportedProtocols != null && info.SupportedProtocols.Any(p => p.tag == (byte)'A' && p.data == 1100))
-						baseStation = f;
+					if
+					(
+						info.SupportedProtocols != null
+						&& info.SupportedProtocols.Any(p => p.tag == (Byte)'A' && p.data == 1100)
+					)
+						task = Task.Run
+						(
+							() =>
+							{
+								this._Monitor(garminDevice);
+							}
+						);
 					else
-						f.Dispose();
+						garminDevice.Dispose();
 				}
 			);
 
-			if (baseStation != null)
+		}
+
+		public void Stop()
+		{
+			this._Stop = true;
+		}
+
+		private void _Monitor(GarminDevice garminDevice)
+		{
+			if (garminDevice != null)
 			{
-				GarminReader reader = new GarminReader(baseStation);
+				GarminReader reader = new GarminReader(garminDevice);
 				while (true)
 				{
+					if (_Stop)
+						break;
 					try
 					{
 						UsbPacket packet = reader.WaitForPacket(3078);

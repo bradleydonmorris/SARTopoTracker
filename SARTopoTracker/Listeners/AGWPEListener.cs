@@ -10,22 +10,34 @@ namespace SARTopoTracker.Listeners
 {
 	public class AGWPEListener : IListener
 	{
+		public event DataReceivedEventHandler DataReceivedEvent;
+		public event ExceptionEventHandler ExceptionEvent;
+
 		private AgwpePort.AgwpePort _AgwePort;
+		private Boolean _Stop { get; set; }
+
+		public void Dispose()
+		{
+			this.Stop();
+		}
 
 		public AGWPEListener(AGWPEPortSettings agwpePortSettings)
 		{
-			
 			this._AgwePort = new AgwpePort.AgwpePort(agwpePortSettings.RadioPort, agwpePortSettings.ServerAddress, agwpePortSettings.ServerPort);
 			this._AgwePort.FrameReceived += new AgwpePort.AgwpePort.AgwpeFrameReceivedEventHandler(AgwePort_FrameReceived);
 		}
 
-		public event DataReceivedEventHandler DataReceivedEvent;
-		public event ExceptionEventHandler ExceptionEvent;
-
 		public void Start()
 		{
+			this._Stop = false;
 			this._AgwePort.Open();
 			this._AgwePort.StartMonitoring();
+		}
+
+		public void Stop()
+		{
+			this._Stop = true;
+			this._AgwePort.Dispose();
 		}
 
 		private void AgwePort_FrameReceived(object sender, AgwpeEventArgs e)

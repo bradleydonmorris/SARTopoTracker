@@ -27,41 +27,10 @@ namespace SARTopoTracker
 		public Form_Main()
 		{
 			InitializeComponent();
-			this._AssetRowIndexes = new Dictionary<String, Int32>();
 			this.TextBox_SARTopoServer.Text = Program.Config.SARTopoSettings.ToString();
 			this.TextBox_AGWPEPort.Text = Program.Config.AGWPEPortSettings.ToString();
-			this._Listeners = new Listeners.IListener[3];
-
-			this._Listeners[0] = new Listeners.LocationServiceListener();
-			this._Listeners[0].DataReceivedEvent += new Listeners.DataReceivedEventHandler(this._ListenerDataReceived);
-			this._Listeners[0].Start();
-
-			this._Listeners[1] = new Listeners.AGWPEListener(Program.Config.AGWPEPortSettings);
-			this._Listeners[1].DataReceivedEvent += new Listeners.DataReceivedEventHandler(this._ListenerDataReceived);
-			this._Listeners[1].Start();
-
-			this._Listeners[2] = new Listeners.GarminListener();
-			this._Listeners[2].DataReceivedEvent += new Listeners.DataReceivedEventHandler(this._ListenerDataReceived);
-			this._Listeners[2].Start();
 		}
 
-		private void _ListenerDataReceived(object sender, DataReceivedEventArgs e)
-		{
-			Int32 index = -1;
-			if (!this._AssetRowIndexes.ContainsKey(e.Asset.Identifier))
-			{
-				this.DataGridView_Positions.Invoke(new Action(() => index = this.DataGridView_Positions.Rows.Add()));
-				this._AssetRowIndexes.Add(e.Asset.Identifier, index);
-			}
-			else
-				index = this._AssetRowIndexes[e.Asset.Identifier];
-			this.DataGridView_Positions.Rows[index].Cells["Column_Identifier"].Value = e.Asset.Identifier;
-			this.DataGridView_Positions.Rows[index].Cells["Column_TimeStamp"].Value = e.Asset.Time;
-			this.DataGridView_Positions.Rows[index].Cells["Column_Latitude"].Value = e.Asset.Latitude;
-			this.DataGridView_Positions.Rows[index].Cells["Column_Longitude"].Value = e.Asset.Longitude;
-			this.DataGridView_Positions.Rows[index].Cells["Column_Altitude"].Value = e.Asset.Altitude;
-			this.DataGridView_Positions.Rows[index].Cells["Column_Comment"].Value = e.Asset.Comment;
-		}
 
 		private void Form_Main_Load(object sender, EventArgs e)
 		{
@@ -119,5 +88,58 @@ namespace SARTopoTracker
 				this.TextBox_AGWPEPort.Text = formAGWPEPort.AGWPEPortSettings.ToString();
 			}
 		}
+
+		private void Button_Start_Click(object sender, EventArgs e)
+		{
+			this.Button_Start.Enabled = false;
+			this.DataGridView_Positions.Rows.Clear();
+			this._Listeners = new Listeners.IListener[3];
+			this._AssetRowIndexes = new Dictionary<String, Int32>();
+
+			this._Listeners[0] = new Listeners.LocationServiceListener();
+			this._Listeners[0].DataReceivedEvent += new Listeners.DataReceivedEventHandler(this._ListenerDataReceived);
+			this._Listeners[0].Start();
+
+			this._Listeners[1] = new Listeners.AGWPEListener(Program.Config.AGWPEPortSettings);
+			this._Listeners[1].DataReceivedEvent += new Listeners.DataReceivedEventHandler(this._ListenerDataReceived);
+			this._Listeners[1].Start();
+
+			this._Listeners[2] = new Listeners.GarminListener();
+			this._Listeners[2].DataReceivedEvent += new Listeners.DataReceivedEventHandler(this._ListenerDataReceived);
+			this._Listeners[2].Start();
+			this.Button_Stop.Enabled = true;
+		}
+
+		private void Button_Stop_Click(object sender, EventArgs e)
+		{
+			this.Button_Stop.Enabled = false;
+			this._Listeners[0].Stop();
+			this._Listeners[1].Stop();
+			this._Listeners[2].Stop();
+
+			this._Listeners[0].Dispose();
+			this._Listeners[1].Dispose();
+			this._Listeners[2].Dispose();
+			this.Button_Start.Enabled = true;
+		}
+
+		private void _ListenerDataReceived(object sender, DataReceivedEventArgs e)
+		{
+			Int32 index = -1;
+			if (!this._AssetRowIndexes.ContainsKey(e.Asset.Identifier))
+			{
+				this.DataGridView_Positions.Invoke(new Action(() => index = this.DataGridView_Positions.Rows.Add()));
+				this._AssetRowIndexes.Add(e.Asset.Identifier, index);
+			}
+			else
+				index = this._AssetRowIndexes[e.Asset.Identifier];
+			this.DataGridView_Positions.Rows[index].Cells["Column_Identifier"].Value = e.Asset.Identifier;
+			this.DataGridView_Positions.Rows[index].Cells["Column_TimeStamp"].Value = e.Asset.Time;
+			this.DataGridView_Positions.Rows[index].Cells["Column_Latitude"].Value = e.Asset.Latitude;
+			this.DataGridView_Positions.Rows[index].Cells["Column_Longitude"].Value = e.Asset.Longitude;
+			this.DataGridView_Positions.Rows[index].Cells["Column_Altitude"].Value = e.Asset.Altitude;
+			this.DataGridView_Positions.Rows[index].Cells["Column_Comment"].Value = e.Asset.Comment;
+		}
+
 	}
 }

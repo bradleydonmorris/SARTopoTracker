@@ -28,23 +28,25 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
 			this.Label_SARTopoServer = new System.Windows.Forms.Label();
 			this.Button_EditSARTopoServer = new System.Windows.Forms.Button();
 			this.TextBox_SARTopoServer = new System.Windows.Forms.TextBox();
 			this.DataGridView_Positions = new System.Windows.Forms.DataGridView();
-			this.TextBox_AGWPEPort = new System.Windows.Forms.TextBox();
-			this.Button_EditAGWPEPort = new System.Windows.Forms.Button();
-			this.Label_AGWPEServer = new System.Windows.Forms.Label();
 			this.Column_Identifier = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.Column_TimeStamp = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.Column_Latitude = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.Column_Longitude = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.Column_Altitude = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.Column_Comment = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.TextBox_AGWPEPort = new System.Windows.Forms.TextBox();
+			this.Button_EditAGWPEPort = new System.Windows.Forms.Button();
+			this.Label_AGWPEServer = new System.Windows.Forms.Label();
+			this.Button_Start = new System.Windows.Forms.Button();
+			this.Button_Stop = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.DataGridView_Positions)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -94,10 +96,54 @@
             this.Column_Longitude,
             this.Column_Altitude,
             this.Column_Comment});
-			this.DataGridView_Positions.Location = new System.Drawing.Point(12, 58);
+			this.DataGridView_Positions.Location = new System.Drawing.Point(12, 91);
 			this.DataGridView_Positions.Name = "DataGridView_Positions";
-			this.DataGridView_Positions.Size = new System.Drawing.Size(925, 343);
+			this.DataGridView_Positions.Size = new System.Drawing.Size(925, 310);
 			this.DataGridView_Positions.TabIndex = 5;
+			// 
+			// Column_Identifier
+			// 
+			this.Column_Identifier.HeaderText = "Identifier";
+			this.Column_Identifier.Name = "Column_Identifier";
+			this.Column_Identifier.ReadOnly = true;
+			// 
+			// Column_TimeStamp
+			// 
+			dataGridViewCellStyle9.Format = "HH:mm:ss";
+			this.Column_TimeStamp.DefaultCellStyle = dataGridViewCellStyle9;
+			this.Column_TimeStamp.HeaderText = "Time Stamp";
+			this.Column_TimeStamp.Name = "Column_TimeStamp";
+			this.Column_TimeStamp.ReadOnly = true;
+			// 
+			// Column_Latitude
+			// 
+			dataGridViewCellStyle10.Format = "0.000000";
+			this.Column_Latitude.DefaultCellStyle = dataGridViewCellStyle10;
+			this.Column_Latitude.HeaderText = "Latitude";
+			this.Column_Latitude.Name = "Column_Latitude";
+			this.Column_Latitude.ReadOnly = true;
+			// 
+			// Column_Longitude
+			// 
+			dataGridViewCellStyle11.Format = "0.000000";
+			this.Column_Longitude.DefaultCellStyle = dataGridViewCellStyle11;
+			this.Column_Longitude.HeaderText = "Longitude";
+			this.Column_Longitude.Name = "Column_Longitude";
+			this.Column_Longitude.ReadOnly = true;
+			// 
+			// Column_Altitude
+			// 
+			dataGridViewCellStyle12.Format = "0.000";
+			this.Column_Altitude.DefaultCellStyle = dataGridViewCellStyle12;
+			this.Column_Altitude.HeaderText = "Altitude";
+			this.Column_Altitude.Name = "Column_Altitude";
+			this.Column_Altitude.ReadOnly = true;
+			// 
+			// Column_Comment
+			// 
+			this.Column_Comment.HeaderText = "Comment";
+			this.Column_Comment.Name = "Column_Comment";
+			this.Column_Comment.ReadOnly = true;
 			// 
 			// TextBox_AGWPEPort
 			// 
@@ -130,55 +176,34 @@
 			this.Label_AGWPEServer.TabIndex = 6;
 			this.Label_AGWPEServer.Text = "AGWPE Server Port:";
 			// 
-			// Column_Identifier
+			// Button_Start
 			// 
-			this.Column_Identifier.HeaderText = "Identifier";
-			this.Column_Identifier.Name = "Column_Identifier";
-			this.Column_Identifier.ReadOnly = true;
+			this.Button_Start.Location = new System.Drawing.Point(12, 62);
+			this.Button_Start.Name = "Button_Start";
+			this.Button_Start.Size = new System.Drawing.Size(75, 23);
+			this.Button_Start.TabIndex = 9;
+			this.Button_Start.Text = "Start";
+			this.Button_Start.UseVisualStyleBackColor = true;
+			this.Button_Start.Click += new System.EventHandler(this.Button_Start_Click);
 			// 
-			// Column_TimeStamp
+			// Button_Stop
 			// 
-			dataGridViewCellStyle1.Format = "HH:mm:ss";
-			this.Column_TimeStamp.DefaultCellStyle = dataGridViewCellStyle1;
-			this.Column_TimeStamp.HeaderText = "Time Stamp";
-			this.Column_TimeStamp.Name = "Column_TimeStamp";
-			this.Column_TimeStamp.ReadOnly = true;
-			// 
-			// Column_Latitude
-			// 
-			dataGridViewCellStyle2.Format = "0.000000";
-			this.Column_Latitude.DefaultCellStyle = dataGridViewCellStyle2;
-			this.Column_Latitude.HeaderText = "Latitude";
-			this.Column_Latitude.Name = "Column_Latitude";
-			this.Column_Latitude.ReadOnly = true;
-			// 
-			// Column_Longitude
-			// 
-			dataGridViewCellStyle3.Format = "0.000000";
-			this.Column_Longitude.DefaultCellStyle = dataGridViewCellStyle3;
-			this.Column_Longitude.HeaderText = "Longitude";
-			this.Column_Longitude.Name = "Column_Longitude";
-			this.Column_Longitude.ReadOnly = true;
-			// 
-			// Column_Altitude
-			// 
-			dataGridViewCellStyle4.Format = "0.000";
-			this.Column_Altitude.DefaultCellStyle = dataGridViewCellStyle4;
-			this.Column_Altitude.HeaderText = "Altitude";
-			this.Column_Altitude.Name = "Column_Altitude";
-			this.Column_Altitude.ReadOnly = true;
-			// 
-			// Column_Comment
-			// 
-			this.Column_Comment.HeaderText = "Comment";
-			this.Column_Comment.Name = "Column_Comment";
-			this.Column_Comment.ReadOnly = true;
+			this.Button_Stop.Enabled = false;
+			this.Button_Stop.Location = new System.Drawing.Point(93, 62);
+			this.Button_Stop.Name = "Button_Stop";
+			this.Button_Stop.Size = new System.Drawing.Size(75, 23);
+			this.Button_Stop.TabIndex = 9;
+			this.Button_Stop.Text = "Stop";
+			this.Button_Stop.UseVisualStyleBackColor = true;
+			this.Button_Stop.Click += new System.EventHandler(this.Button_Stop_Click);
 			// 
 			// Form_Main
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(945, 403);
+			this.Controls.Add(this.Button_Stop);
+			this.Controls.Add(this.Button_Start);
 			this.Controls.Add(this.TextBox_AGWPEPort);
 			this.Controls.Add(this.Button_EditAGWPEPort);
 			this.Controls.Add(this.Label_AGWPEServer);
@@ -210,6 +235,8 @@
 		private System.Windows.Forms.DataGridViewTextBoxColumn Column_Longitude;
 		private System.Windows.Forms.DataGridViewTextBoxColumn Column_Altitude;
 		private System.Windows.Forms.DataGridViewTextBoxColumn Column_Comment;
+		private System.Windows.Forms.Button Button_Start;
+		private System.Windows.Forms.Button Button_Stop;
 	}
 }
 
