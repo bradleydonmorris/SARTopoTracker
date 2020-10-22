@@ -24,7 +24,7 @@ namespace SARTopoTracker.Assets
 			if (aprsPacket.Payload is HamAprsParser.Payloads.PositionPayload positionPayload)
 			{
 				this.Latitude = positionPayload.Position.Latitude;
-				this.Longitude = positionPayload.Position.Latitude;
+				this.Longitude = positionPayload.Position.Longitude;
 				if (positionPayload.Position.AltitudeFt.HasValue)
 					this.Altitude = (Single)positionPayload.Position.AltitudeFt / (Single)0.3048;
 				this.PositionAmbiguity = positionPayload.Position.PositionAmbiguity;

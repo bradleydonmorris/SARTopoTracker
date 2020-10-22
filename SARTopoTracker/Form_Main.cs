@@ -39,6 +39,10 @@ namespace SARTopoTracker
 			this._Listeners[1] = new Listeners.AGWPEListener(Program.Config.AGWPEPortSettings);
 			this._Listeners[1].DataReceivedEvent += new Listeners.DataReceivedEventHandler(this._ListenerDataReceived);
 			this._Listeners[1].Start();
+
+			this._Listeners[2] = new Listeners.GarminListener();
+			this._Listeners[2].DataReceivedEvent += new Listeners.DataReceivedEventHandler(this._ListenerDataReceived);
+			this._Listeners[2].Start();
 		}
 
 		private void _ListenerDataReceived(object sender, DataReceivedEventArgs e)

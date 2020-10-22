@@ -97,11 +97,12 @@ namespace SARTopoTracker.Assets
 
 			this.Comment = String.Format
 			(
-				"DogStatus: {0}, TrackerType: {1}, Battery: {2}, Channel: {3}",
+				"DogStatus: {0}, TrackerType: {1}, Battery: {2}, Channel: {3}, Message: {4}",
 				this.DogStatus,
 				this.TrackerType,
 				this.Battery,
-				this.Channel
+				this.Channel,
+				this.Message
 			);
 	}
 }
