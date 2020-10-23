@@ -1,6 +1,6 @@
 ﻿namespace SARTopoTracker
 {
-	partial class Form_AGWPEPort
+	partial class Form_AGWPEPortSettings
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -45,7 +45,7 @@
 			this.Button_Save.Location = new System.Drawing.Point(153, 91);
 			this.Button_Save.Name = "Button_Save";
 			this.Button_Save.Size = new System.Drawing.Size(75, 23);
-			this.Button_Save.TabIndex = 20;
+			this.Button_Save.TabIndex = 4;
 			this.Button_Save.Text = "Save";
 			this.Button_Save.UseVisualStyleBackColor = true;
 			this.Button_Save.Click += new System.EventHandler(this.Button_Save_Click);
@@ -57,7 +57,7 @@
 			this.Button_Cancel.Location = new System.Drawing.Point(234, 91);
 			this.Button_Cancel.Name = "Button_Cancel";
 			this.Button_Cancel.Size = new System.Drawing.Size(75, 23);
-			this.Button_Cancel.TabIndex = 21;
+			this.Button_Cancel.TabIndex = 5;
 			this.Button_Cancel.Text = "Cancel";
 			this.Button_Cancel.UseVisualStyleBackColor = true;
 			// 
@@ -87,7 +87,7 @@
 			this.TextBox_Config_AGWPEServerAddress.Location = new System.Drawing.Point(94, 11);
 			this.TextBox_Config_AGWPEServerAddress.Name = "TextBox_Config_AGWPEServerAddress";
 			this.TextBox_Config_AGWPEServerAddress.Size = new System.Drawing.Size(215, 20);
-			this.TextBox_Config_AGWPEServerAddress.TabIndex = 22;
+			this.TextBox_Config_AGWPEServerAddress.TabIndex = 1;
 			// 
 			// Label_Config_AGWPEServerAddress
 			// 
@@ -105,7 +105,8 @@
 			this.TextBox_Config_AGWPERadioPort.Location = new System.Drawing.Point(94, 63);
 			this.TextBox_Config_AGWPERadioPort.Name = "TextBox_Config_AGWPERadioPort";
 			this.TextBox_Config_AGWPERadioPort.Size = new System.Drawing.Size(76, 20);
-			this.TextBox_Config_AGWPERadioPort.TabIndex = 23;
+			this.TextBox_Config_AGWPERadioPort.TabIndex = 3;
+			this.TextBox_Config_AGWPERadioPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBox_Config_AGWPERadioPort_KeyPress);
 			// 
 			// TextBox_Config_AGWPEServerPort
 			// 
@@ -113,9 +114,10 @@
 			this.TextBox_Config_AGWPEServerPort.Location = new System.Drawing.Point(94, 37);
 			this.TextBox_Config_AGWPEServerPort.Name = "TextBox_Config_AGWPEServerPort";
 			this.TextBox_Config_AGWPEServerPort.Size = new System.Drawing.Size(76, 20);
-			this.TextBox_Config_AGWPEServerPort.TabIndex = 24;
+			this.TextBox_Config_AGWPEServerPort.TabIndex = 2;
+			this.TextBox_Config_AGWPEServerPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBox_Config_AGWPEServerPort_KeyPress);
 			// 
-			// Form_AGWPEPort
+			// Form_AGWPEPortSettings
 			// 
 			this.AcceptButton = this.Button_Save;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -133,11 +135,11 @@
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
-			this.Name = "Form_AGWPEPort";
+			this.Name = "Form_AGWPEPortSettings";
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "AGWPE Port";
-			this.Load += new System.EventHandler(this.Form_AGWPEPort_Load);
+			this.Load += new System.EventHandler(this.Form_AGWPEPortSettings_Load);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

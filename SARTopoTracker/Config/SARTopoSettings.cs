@@ -19,6 +19,7 @@ namespace SARTopoTracker.Config
 		public String Scheme { get; set; }
 		public String Address { get; set; }
 		public Int32 Port { get; set; }
+		public String MapID { get; set; }
 
 		[JsonIgnore]
 		public String URI
@@ -35,6 +36,22 @@ namespace SARTopoTracker.Config
 			}
 		}
 
+		[JsonIgnore]
+		public String MapURI
+		{
+			get
+			{
+				return String.Format
+				(
+					"{0}://{1}:{2}/m/{3}",
+					this.Scheme,
+					this.Address,
+					this.Port,
+					this.MapID
+				);
+			}
+		}
+
 		public SARTopoSettings() { }
 
 		public SARTopoSettings(String url)
@@ -47,7 +64,12 @@ namespace SARTopoTracker.Config
 
 		public override String ToString()
 		{
-			return this.URI;
+			return
+			(
+				String.IsNullOrEmpty(this.MapID)
+					? this.URI
+					: this.MapURI
+			);
 		}
 	}
 }

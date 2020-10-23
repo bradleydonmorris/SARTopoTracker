@@ -16,71 +16,57 @@ namespace SARTopoTracker
 	{
 
 		private Dictionary<String, Int32> _AssetRowIndexes { get; set; }
+		private Dictionary<String, DateTimeOffset> _AssetLastPostTime { get; set; }
 
 		private String _CallSign { get; set; }
 		private Int32 _DefaultSendSeconds { get; set; }
 		private Listeners.IListener[] _Listeners { get; set; }
+		private SARTopoTracker.SARTopoClient.Client _SARTopoClient { get; set; }
 
-		//private AgwpePort.AgwpePort _AgwePort;
-		//private System.Device.Location.GeoCoordinateWatcher _GeoCoordinateWatcher { get; set; }
-		
 		public Form_Main()
 		{
 			InitializeComponent();
+			this.TextBox_ThisStationIdentifier.Text = Program.Config.ThisStationIdentifier;
 			this.TextBox_SARTopoServer.Text = Program.Config.SARTopoSettings.ToString();
 			this.TextBox_AGWPEPort.Text = Program.Config.AGWPEPortSettings.ToString();
+			this.TextBox_GarminPrefix.Text = Program.Config.GarminPrefix;
+			this.TextBox_SARTopoUpdateSeconds.Text = Program.Config.SARTopoUpdateSeconds.ToString();
 		}
-
 
 		private void Form_Main_Load(object sender, EventArgs e)
 		{
-			//this._GeoCoordinateWatcher = new System.Device.Location.GeoCoordinateWatcher(System.Device.Location.GeoPositionAccuracy.High);
-			//this._GeoCoordinateWatcher.StatusChanged += GeoCoordinateWatcher_StatusChanged;
-			//this._GeoCoordinateWatcher.Start();
 		}
 
-		//private void GeoCoordinateWatcher_StatusChanged(object sender, GeoPositionStatusChangedEventArgs e)
-		//{
-
-		//	Console.WriteLine("Label, TimeStamp, Latitude, Longitude, Altitude, Course, Speed, Horizontal Accuracy, Verticle Accuracy");
-		//	Console.WriteLine
-		//	(
-		//		String.Format
-		//		(
-		//			"{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}",
-		//			this._GeoCoordinateWatcher.Position.Timestamp.ToUniversalTime().ToString("yyyy-MM-dd HH:mm:ss.fffffffZ"),
-		//			this._GeoCoordinateWatcher.Position.Location.Latitude,
-		//			this._GeoCoordinateWatcher.Position.Location.Longitude,
-		//			this._GeoCoordinateWatcher.Position.Location.Altitude,
-		//			this._GeoCoordinateWatcher.Position.Location.Course,
-		//			this._GeoCoordinateWatcher.Position.Location.Speed,
-		//			this._GeoCoordinateWatcher.Position.Location.HorizontalAccuracy,
-		//			this._GeoCoordinateWatcher.Position.Location.VerticalAccuracy
-		//		)
-		//	);
-
-
-		//}
-
-		private void Button_EditSARTopoServer_Click(object sender, EventArgs e)
+		private void Button_EditThisStationIdentifier_Click(object sender, EventArgs e)
 		{
-			if (this.TextBox_SARTopoServer.ReadOnly)
+			if (this.TextBox_ThisStationIdentifier.ReadOnly)
 			{
-				this.TextBox_SARTopoServer.ReadOnly = false;
-				this.Button_EditSARTopoServer.Text = "Save";
+				this.TextBox_ThisStationIdentifier.ReadOnly = false;
+				this.Button_EditThisStationIdentifier.Text = "Save";
 			}
 			else
 			{
-				this.TextBox_SARTopoServer.ReadOnly = true;
-				Program.Config.SARTopoSettings = new Config.SARTopoSettings(this.TextBox_SARTopoServer.Text);
+				this.TextBox_ThisStationIdentifier.ReadOnly = true;
+				Program.Config.ThisStationIdentifier = this.TextBox_ThisStationIdentifier.Text;
 				Program.Config.Save();
-				this.Button_EditSARTopoServer.Text = "Edit";
+				this.Button_EditThisStationIdentifier.Text = "Edit";
+			}
+		}
+
+		private void Button_EditSARTopoServer_Click(object sender, EventArgs e)
+		{
+			Form_SARTopoSettings formSARTopoSettings = new Form_SARTopoSettings() { SARTopoSettings = Program.Config.SARTopoSettings };
+			if (formSARTopoSettings.ShowDialog(this) == DialogResult.OK)
+			{
+				Program.Config.SARTopoSettings = formSARTopoSettings.SARTopoSettings;
+				Program.Config.Save();
+				this.TextBox_AGWPEPort.Text = formSARTopoSettings.SARTopoSettings.ToString();
 			}
 		}
 
 		private void Button_EditAGWPEServer_Click(object sender, EventArgs e)
 		{
-			Form_AGWPEPort formAGWPEPort = new Form_AGWPEPort() { AGWPEPortSettings = Program.Config.AGWPEPortSettings };
+			Form_AGWPEPortSettings formAGWPEPort = new Form_AGWPEPortSettings() { AGWPEPortSettings = Program.Config.AGWPEPortSettings };
 			if (formAGWPEPort.ShowDialog(this) == DialogResult.OK)
 			{
 				Program.Config.AGWPEPortSettings = formAGWPEPort.AGWPEPortSettings;
@@ -89,14 +75,40 @@ namespace SARTopoTracker
 			}
 		}
 
+		private void Button_EditGarminPrefix_Click(object sender, EventArgs e)
+		{
+			if (this.TextBox_GarminPrefix.ReadOnly)
+			{
+				this.TextBox_GarminPrefix.ReadOnly = false;
+				this.Button_EditGarminPrefix.Text = "Save";
+			}
+			else
+			{
+				this.TextBox_GarminPrefix.ReadOnly = true;
+				Program.Config.GarminPrefix = this.TextBox_GarminPrefix.Text;
+				Program.Config.Save();
+				this.Button_EditGarminPrefix.Text = "Edit";
+			}
+		}
+
 		private void Button_Start_Click(object sender, EventArgs e)
 		{
 			this.Button_Start.Enabled = false;
+
+			this.Button_EditThisStationIdentifier.Enabled = false;
+			this.Button_EditSARTopoServer.Enabled = false;
+			this.Button_EditAGWPEPort.Enabled = false;
+			this.Button_EditGarminPrefix.Enabled = false;
+			this.Button_EidtSARTopoUpdateSeconds.Enabled = false;
+
 			this.DataGridView_Positions.Rows.Clear();
 			this._Listeners = new Listeners.IListener[3];
 			this._AssetRowIndexes = new Dictionary<String, Int32>();
+			this._AssetLastPostTime = new Dictionary<String, DateTimeOffset>();
 
-			this._Listeners[0] = new Listeners.LocationServiceListener();
+			this._SARTopoClient = new SARTopoClient.Client(Program.Config.SARTopoSettings.URI, Program.Config.SARTopoSettings.MapURI);
+
+			this._Listeners[0] = new Listeners.LocationServiceListener(Program.Config.ThisStationIdentifier);
 			this._Listeners[0].DataReceivedEvent += new Listeners.DataReceivedEventHandler(this._ListenerDataReceived);
 			this._Listeners[0].Start();
 
@@ -121,6 +133,12 @@ namespace SARTopoTracker
 			this._Listeners[1].Dispose();
 			this._Listeners[2].Dispose();
 			this.Button_Start.Enabled = true;
+
+			this.Button_EditThisStationIdentifier.Enabled = true;
+			this.Button_EditSARTopoServer.Enabled = true;
+			this.Button_EditAGWPEPort.Enabled = true;
+			this.Button_EditGarminPrefix.Enabled = true;
+			this.Button_EidtSARTopoUpdateSeconds.Enabled = true;
 		}
 
 		private void _ListenerDataReceived(object sender, DataReceivedEventArgs e)
@@ -133,13 +151,61 @@ namespace SARTopoTracker
 			}
 			else
 				index = this._AssetRowIndexes[e.Asset.Identifier];
-			this.DataGridView_Positions.Rows[index].Cells["Column_Identifier"].Value = e.Asset.Identifier;
-			this.DataGridView_Positions.Rows[index].Cells["Column_TimeStamp"].Value = e.Asset.Time;
-			this.DataGridView_Positions.Rows[index].Cells["Column_Latitude"].Value = e.Asset.Latitude;
-			this.DataGridView_Positions.Rows[index].Cells["Column_Longitude"].Value = e.Asset.Longitude;
-			this.DataGridView_Positions.Rows[index].Cells["Column_Altitude"].Value = e.Asset.Altitude;
-			this.DataGridView_Positions.Rows[index].Cells["Column_Comment"].Value = e.Asset.Comment;
+
+			this.DataGridView_Positions.Invoke(new Action(() => this.DataGridView_Positions.Rows[index].Cells["Column_Identifier"].Value = e.Asset.Identifier));
+			this.DataGridView_Positions.Invoke(new Action(() => this.DataGridView_Positions.Rows[index].Cells["Column_TimeStamp"].Value = e.Asset.Time));
+			this.DataGridView_Positions.Invoke(new Action(() => this.DataGridView_Positions.Rows[index].Cells["Column_Latitude"].Value = e.Asset.Latitude));
+			this.DataGridView_Positions.Invoke(new Action(() => this.DataGridView_Positions.Rows[index].Cells["Column_Longitude"].Value = e.Asset.Longitude));
+			this.DataGridView_Positions.Invoke(new Action(() => this.DataGridView_Positions.Rows[index].Cells["Column_Altitude"].Value = e.Asset.Altitude));
+			this.DataGridView_Positions.Invoke(new Action(() => this.DataGridView_Positions.Rows[index].Cells["Column_Comment"].Value = e.Asset.Comment));
+
+			DateTimeOffset lastSentTime = DateTimeOffset.MinValue;
+			if (this._AssetLastPostTime.ContainsKey(e.Asset.Identifier))
+				lastSentTime = this._AssetLastPostTime[e.Asset.Identifier];
+			else
+			{
+				this._AssetLastPostTime.Add(e.Asset.Identifier, DateTimeOffset.UtcNow);
+				lastSentTime = this._AssetLastPostTime[e.Asset.Identifier];
+			}
+			if
+			(
+				!e.Asset.Time.Equals(DateTimeOffset.MinValue)
+				&& lastSentTime.AddSeconds(this._DefaultSendSeconds) < DateTimeOffset.UtcNow
+			)
+			{
+				this._AssetLastPostTime[e.Asset.Identifier] = DateTimeOffset.UtcNow;
+				if (Program.Config.ThisStationIdentifier.Equals(e.Asset.Identifier))
+					this._SARTopoClient.AddMarker(e.Asset.Identifier, null, e.Asset.Latitude, e.Asset.Longitude, new SARTopoClient.Marker());
+				else
+					this._SARTopoClient.UpdateLocator(e.Asset.Identifier, e.Asset.Latitude, e.Asset.Longitude);
+			}
 		}
 
+		private void Button_EidtSARTopoUpdateSeconds_Click(object sender, EventArgs e)
+		{
+			if (this.TextBox_SARTopoUpdateSeconds.ReadOnly)
+			{
+				this.TextBox_SARTopoUpdateSeconds.ReadOnly = false;
+				this.Button_EidtSARTopoUpdateSeconds.Text = "Save";
+			}
+			else
+			{
+				this.TextBox_SARTopoUpdateSeconds.ReadOnly = true;
+				Program.Config.SARTopoUpdateSeconds = Int32.Parse(this.TextBox_SARTopoUpdateSeconds.Text);
+				Program.Config.Save();
+				this.Button_EidtSARTopoUpdateSeconds.Text = "Edit";
+			}
+		}
+
+		private void TextBox_SARTopoUpdateSeconds_KeyPress(object sender, KeyPressEventArgs e)
+		{
+			if
+			(
+				!Char.IsControl(e.KeyChar)
+				&& !Char.IsDigit(e.KeyChar)
+				&& !e.KeyChar.Equals('.')
+			)
+				e.Handled = true;
+		}
 	}
 }

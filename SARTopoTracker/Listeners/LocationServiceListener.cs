@@ -11,10 +11,16 @@ namespace SARTopoTracker.Listeners
 
 		private GeoCoordinateWatcher _GeoCoordinateWatcher { get; set; }
 		private Boolean _Stop { get; set; }
+		public String ThisStationIdentifier { get; set; }
 
 		public void Dispose()
 		{
 			this.Stop();
+		}
+
+		public LocationServiceListener(String thisStationIdentifier)
+		{
+			this.ThisStationIdentifier = thisStationIdentifier;
 		}
 
 		public void Start()
@@ -35,7 +41,7 @@ namespace SARTopoTracker.Listeners
 		{
 			try
 			{
-				DataReceivedEvent?.Invoke(this, new DataReceivedEventArgs(new LocationServiceAsset("This Station", this._GeoCoordinateWatcher.Position)));
+				DataReceivedEvent?.Invoke(this, new DataReceivedEventArgs(new LocationServiceAsset(this.ThisStationIdentifier, this._GeoCoordinateWatcher.Position)));
 			}
 			catch (Exception exception)
 			{

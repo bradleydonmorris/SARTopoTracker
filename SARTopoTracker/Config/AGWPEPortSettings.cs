@@ -9,6 +9,13 @@ namespace SARTopoTracker.Config
 {
 	public class AGWPEPortSettings
 	{
+		public static AGWPEPortSettings Default = new AGWPEPortSettings()
+		{
+			RadioPort = 1,
+			ServerAddress = "localhost",
+			ServerPort = 8000
+		};
+
 		public Byte RadioPort { get; set; }
 		public String ServerAddress { get; set; }
 		public Int32 ServerPort { get; set; }
