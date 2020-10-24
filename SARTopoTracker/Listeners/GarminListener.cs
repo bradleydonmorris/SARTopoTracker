@@ -14,11 +14,17 @@ namespace SARTopoTracker.Listeners
 		public event DataReceivedEventHandler DataReceivedEvent;
 		public event ExceptionEventHandler ExceptionEvent;
 
+		private String _GarminPrefix { get; set; }
 		private Boolean _Stop { get; set; }
 
 		public void Dispose()
 		{
 			this.Stop();
+		}
+
+		public GarminListener(String garminPrefix)
+		{
+			this._GarminPrefix = garminPrefix;
 		}
 
 		public void Start()
@@ -68,7 +74,7 @@ namespace SARTopoTracker.Listeners
 					try
 					{
 						UsbPacket packet = reader.WaitForPacket(3078);
-						DataReceivedEvent?.Invoke(this, new DataReceivedEventArgs(new GarminAsset(packet.data)));
+						DataReceivedEvent?.Invoke(this, new DataReceivedEventArgs(new GarminAsset(this._GarminPrefix, packet.data)));
 					}
 					catch (Exception e)
 					{

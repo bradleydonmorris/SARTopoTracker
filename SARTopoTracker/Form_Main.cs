@@ -116,7 +116,7 @@ namespace SARTopoTracker
 			this._Listeners[1].DataReceivedEvent += new Listeners.DataReceivedEventHandler(this._ListenerDataReceived);
 			this._Listeners[1].Start();
 
-			this._Listeners[2] = new Listeners.GarminListener();
+			this._Listeners[2] = new Listeners.GarminListener(Program.Config.GarminPrefix);
 			this._Listeners[2].DataReceivedEvent += new Listeners.DataReceivedEventHandler(this._ListenerDataReceived);
 			this._Listeners[2].Start();
 			this.Button_Stop.Enabled = true;

@@ -38,7 +38,7 @@ namespace SARTopoTracker.Assets
 
 		public GarminAsset() { }
 
-		public GarminAsset(byte[] buffer)
+		public GarminAsset(String identifierPrefix, byte[] buffer)
 		{
 			Int32 offset = 0;
 
@@ -75,23 +75,23 @@ namespace SARTopoTracker.Assets
 			SquelchCode = buffer[offset++];
 			Index = buffer[offset++];
 
-			StringBuilder sringBuilder = new StringBuilder();
+			StringBuilder stringBuilder = new StringBuilder();
 			for (Int32 i = 0; i < 37; i++)
 			{
 				if (buffer[offset + i] == 0) break;
-				sringBuilder.Append((Char)buffer[offset + i]);
+				stringBuilder.Append((Char)buffer[offset + i]);
 			}
 			offset += 37;
-			Identifier = sringBuilder.ToString();
+			Identifier = String.Format("{0}-{1}", identifierPrefix, stringBuilder.ToString());
 
-			sringBuilder.Clear();
+			stringBuilder.Clear();
 			for (Int32 i = 0; i < 31; i++)
 			{
 				if (buffer[offset + i] == 0) break;
-				sringBuilder.Append((Char)buffer[offset + i]);
+				stringBuilder.Append((Char)buffer[offset + i]);
 			}
 			offset += 31;
-			Message = sringBuilder.ToString();
+			Message = stringBuilder.ToString();
 
 
 
