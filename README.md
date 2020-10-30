@@ -6,3 +6,5 @@ This application makes use of the following projects:
  - [AgwpePort](https://archive.codeplex.com/?p=agwpeport)
  - [Garmin.Device.Core](https://github.com/mcosand/trackers-temp)
  
+Current Development Status Summary
+![alt text](Status.png?raw=true)
